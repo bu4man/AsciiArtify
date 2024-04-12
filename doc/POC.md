@@ -26,9 +26,9 @@ $ k get all -A
 
 2. Create separate namespace for ArgoCD and install it there
 ```bash
-$ kubectl create namespace argocd
+$   
 namespace/argocd created
-$ k get ns
+$ k get nsk create namespace argocd
 NAME              STATUS   AGE
 default           Active   4m58s
 kube-system       Active   4m58s
@@ -100,6 +100,62 @@ Now you have user `admin` and password `PktDHVFmgzXLnx22`, so use them to access
 
 ![Source](2.png)
 
+- Under Destination select `Cluster URL` from drop-down list and type `demo` in Namespace field
+
+![Source](3.png)
 
 
+- Sroll up to `Sync policy` section and set checkbox `AUTO-CREATE NAMESPACE`
 
+![Source](4.png)
+
+- Click `Create` button
+
+![Source](5.png)
+
+6. Now click on `demo` name of newly created application to see details about components
+
+7. Sync the application
+
+- Click on `Sync` button in application details page
+- new window will appear where you can select which components and mode to be used. Click `Synchronize`
+
+![Source](6.png)
+
+- once done, status will be seen in GUI
+
+![Source](7.png)
+
+
+8. Let's do some changes in repo and sync again
+
+- Edit file [values.yaml](https://github.com/bu4man/go-demo-app/blob/master/helm/values.yaml)
+- Change there `type` from nodePort to LoadBalancer in `api-gateway` section
+- Check current type using below command:
+
+```bash
+$ k get svc -n demo
+NAME               TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                                                 AGE
+demo-nats          ClusterIP   None            <none>        4222/TCP,6222/TCP,8222/TCP,7777/TCP,7422/TCP,7522/TCP   7m42s
+demo-img           ClusterIP   10.43.170.221   <none>        80/TCP                                                  7m42s
+demo-data          ClusterIP   10.43.29.143    <none>        80/TCP                                                  7m42s
+cache              ClusterIP   10.43.71.71     <none>        6379/TCP                                                7m42s
+demo-front         ClusterIP   10.43.246.67    <none>        80/TCP                                                  7m42s
+ambassador         NodePort    10.43.99.103    <none>        80:31134/TCP                                            7m42s
+ambassador-admin   ClusterIP   10.43.32.234    <none>        8877/TCP                                                7m42s
+demo-ascii         ClusterIP   10.43.229.238   <none>        80/TCP                                                  7m42s
+db                 ClusterIP   10.43.17.49     <none>        3306/TCP                                                7m42s
+demo-api           ClusterIP   10.43.149.92    <none>        80/TCP                                                  7m42s
+```
+- Do Sync in GUI
+
+![Source](8.png)
+
+- check new type using the same command
+
+```bash
+$ k get svc -n demo
+NAME               TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                                                 AGE
+....
+ambassador         LoadBalancer   10.43.99.103    <pending>     80:31134/TCP                                            10m
+```
