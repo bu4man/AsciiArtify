@@ -26,9 +26,9 @@ $ k get all -A
 
 2. Create separate namespace for ArgoCD and install it there
 ```bash
-$   
+$ k create namespace argocd  
 namespace/argocd created
-$ k get nsk create namespace argocd
+$ k get ns
 NAME              STATUS   AGE
 default           Active   4m58s
 kube-system       Active   4m58s
